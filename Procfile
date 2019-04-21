@@ -1,2 +1,2 @@
-web: golang main.go
+web: main.go
 
