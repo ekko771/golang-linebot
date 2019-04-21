@@ -1,2 +1,0 @@
-web: golang-linebot
-
