@@ -1,2 +1,2 @@
-web: test
+web: golang-linebot
 
