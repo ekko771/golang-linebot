@@ -69,8 +69,7 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					str:=senthttp()
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text+" "+str)).Do(); err != nil {
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text+" "+senthttp())).Do(); err != nil {
 						log.Print(err)
 					}
 				}
