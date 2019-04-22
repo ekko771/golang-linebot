@@ -1,4 +1,3 @@
-    
 // Copyright 2016 LINE Corporation
 //
 // LINE Corporation licenses this file to you under the Apache License,
@@ -19,10 +18,33 @@ import (
 	"log"
 	"net/http"
 	"os"
-
+	"io/ioutil"
+    "bytes"
+    "fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
+func senthttp() string {
+    url := "http://restapi3.apiary.io/notes"
+    fmt.Println("URL:>", url)
 
+    var jsonStr = []byte(`{"title":"Buy cheese and bread for breakfast."}`)
+    req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+    req.Header.Set("X-Custom-Header", "myvalue")
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    fmt.Println("response Status:", resp.Status)
+    fmt.Println("response Headers:", resp.Header)
+    body, _ := ioutil.ReadAll(resp.Body)
+    fmt.Println("response Body:", string(body))
+    return string(body)
+}
 func main() {
 	bot, err := linebot.New(
 		os.Getenv("ChannelSecret"),
@@ -47,7 +69,8 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text+" 87?")).Do(); err != nil {
+					str:=senthttp()
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text+" "+str)).Do(); err != nil {
 						log.Print(err)
 					}
 				}
